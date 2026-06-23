@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Assistant Nutrition Détaillé</title>
+    <style>
+        :root {
+            --primary: #2ecc71;
+            --primary-dark: #27ae60;
+            --bg: #f4f7f6;
+            --dark: #34495e;
+            --accent: #3498db;
+            --accent-dark: #2980b9;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg);
+            color: var(--dark);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent; /* Enlève l'effet/flash bleu au clic sur mobile */
+        }
+
+        .container {
+            max-width: 950px;
+            width: 100%;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-dark);
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+
+        h3 {
+            margin-bottom: 12px;
+            color: #7f8c8d;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-left: 4px solid var(--primary);
+            padding-left: 8px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .grid-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 20px;
+        }
+
+        .cat-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 10px;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .cat-box h4 {
+            margin: 0 0 12px 0;
+            font-size: 16px;
+            color: var(--dark);
+            position: sticky;
+            top: 0;
+            background: #f8fafc;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #cbd5e1;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .btn {
+            background: #fff;
+            border: 1px solid #cbd5e1;
+            padding: 6px 12px;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn:hover {
+            border-color: #94a3b8;
+            background: #f1f5f9;
+        }
+
+        .btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .basket-list {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            min-height: 45px;
+            align-items: center;
+            background: #fffdf5;
+            border: 2px dashed #fef08a;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .badge {
+            background: var(--dark);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .btn-main {
+            width: 100%;
+            background-color: var(--primary-dark);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-main:hover {
+            background-color: #1e8449;
+        }
+
+        .recipe-selector-box {
+            margin-top: 20px;
+            display: none;
+            background: #f0fdf4;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #bbf7d0;
+        }
+
+        .recipe-choices {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .btn-choice {
+            background: white;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .btn-choice:hover, .btn-choice.selected {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+        }
+
+        .result-box {
+            margin-top: 25px;
+            padding: 30px;
+            border-left: 6px solid var(--accent);
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            display: none;
+        }
+
+        .recipe-meta {
+            display: flex;
+            gap: 20px;
+            background: #f8fafc;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .prep-steps {
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .step-block {
+            margin-bottom: 15px;
+            padding-left: 10px;
+            border-left: 3px solid #e2e8f0;
+        }
+
+        .tip-box {
+            margin-top: 20px;
+            background: #fff9db;
+            border: 1px solid #ffe066;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #664d03;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Mon Assistant Nutrition Haute Précision 👨‍🍳</h1>
+    
+    <div class="section">
+        <h3>1. Cochez vos ingrédients disponibles :</h3>
+        <div class="grid-categories">
+            <div class="cat-box">
+                <h4>🍓 Fruits</h4>
+                <div class="btn-group" id="fruits-box"></div>
+            </div>
+            <div class="cat-box">
+                <h4>🥦 Légumes</h4>
+                <div class="btn-group" id="legumes-box"></div>
+            </div>
+            <div class="cat-box">
+                <h4>🍗 Protéines</h4>
+                <div class="btn-group" id="proteines-box"></div>
+            </div>
+            <div class="cat-box">
+                <h4>🌾 Féculents</h4>
+                <div class="btn-group" id="feculents-box"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>2. Préférence de température :</h3>
+        <div class="btn-group" id="temp-group">
+            <button class="btn active" onclick="selectTemp('froide', this)">🧊 Recette froide</button>
+            <button class="btn" onclick="selectTemp('chaude', this)">🔥 Recette chaude</button>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>3. Vos choix actuels :</h3>
+        <div class="basket-list" id="basket">
+            <span style="color: #94a3b8; font-style: italic;">Aucun ingrédient sélectionné.</span>
+        </div>
+    </div>
+
+    <button class="btn-main" onclick="chercherRecettes()">🔎 Trouver les recettes correspondantes</button>
+
+    <div id="selector-box" class="recipe-selector-box">
+        <h4 style="margin: 0; color: #166534;" id="selector-title">Recettes trouvées :</h4>
+        <div id="recipe-choices-container" class="recipe-choices"></div>
+    </div>
+
+    <div id="result" class="result-box">
+        <h2 id="recipe-title" style="color: var(--accent-dark); margin-top: 0; margin-bottom: 10px;">Nom de la recette</h2>
+        <p style="font-style: italic; color: #7f8c8d; margin-bottom: 15px;" id="recipe-ingredients"></p>
+        
+        <div class="recipe-meta">
+            <span id="meta-time">⏱️ <b>Temps :</b> -- min</span>
+            <span id="meta-tools">🍳 <b>Matériel :</b> --</span>
+        </div>
+
+        <h4 style="margin-bottom: 10px; text-transform: uppercase; color: var(--dark);">Instructions de préparation :</h4>
+        <div class="prep-steps" id="recipe-steps"></div>
+
+        <div class="tip-box" id="recipe-tip"></div>
+    </div>
+</div>
+
+<script>
+// RETOUR DE TOUS LES INGRÉDIENTS CORRIGÉS
+const ingredientsData = {
+    "fruits": ["Pomme", "Banane", "Fraise", "Orange", "Poire", "Kiwi", "Mangue", "Ananas", "Framboise", "Myrtille", "Avocat", "Citron", "Figue", "Raisin"],
+    "legumes": ["Tomate", "Courgette", "Carotte", "Brocoli", "Épinard", "Poivron", "Aubergine", "Oignon", "Concombre", "Laitue", "Champignon", "Patate douce", "Petit pois"],
+    "proteines": ["Poulet", "Œuf", "Tofu", "Saumon", "Thon", "Bœuf", "Crevette", "Lentilles", "Pois chiches"],
+    "feculents": ["Riz", "Pâtes", "Quinoa", "Pomme de terre", "Semoule", "Avoine", "Pain complet", "Maïs"]
+};
+
+// Grand catalogue de recettes ultra-détaillées
+const baseRecettes = [
+    {
+        nom: "Salade de Pâtes Méditerranéenne au Thon",
+        temp: "froide",
+        ingredients: ["Tomate", "Pâtes", "Thon"],
+        temps: "20 min (dont 10 min de cuisson)",
+        materiel: "Casserole, passoire, grand saladier, couteau d'office",
+        etapes: [
+            "<b>Cuisson des pâtes :</b> Portez un grand volume d'eau salée à ébullition dans votre casserole. Plongez-y les pâtes et respectez le temps indiqué sur le paquet pour une cuisson al dente. Égouttez-les et passez-les sous l'eau froide pour stopper la cuisson et les refroidir instantanément.",
+            "<b>Découpe des végétaux :</b> Lavez soigneusement les tomates. Sur une planche, taillez-les en petits cubes réguliers en conservant le jus qui nourrira les pâtes.",
+            "<b>Préparation de la base :</b> Dans votre saladier, ouvrez et égouttez la boîte de thon. À l'aide d'une fourchette, émiettez-le finement au fond du plat.",
+            "<b>Assemblage et assaisonnement :</b> Ajoutez les pâtes refroidies et les dés de tomates dans le saladier. Arrosez généreusement avec 2 cuillères à soupe d'huile d'olive, 1 cuillère à soupe de vinaigre, du sel et du poivre. Mélangez délicatement.",
+            "<b>Repos :</b> Placez au réfrigérateur au moins 15 minutes avant de servir pour que les pâtes s'imprègnent de toutes les saveurs."
+        ],
+        astuce: "💡 <b>Le conseil du chef :</b> Vous pouvez ajouter un reste d'oignon émincé ou quelques herbes de Provence pour donner encore plus de caractère à cette salade économique !"
+    },
+    {
+        nom: "Wok de Poulet Sauté aux Brocolis et son Riz Parfumé",
+        temp: "chaude",
+        ingredients: ["Poulet", "Brocoli", "Riz"],
+        temps: "25 min (simultané)",
+        materiel: "Grande poêle ou Wok, casserole avec couvercle, planche à découper",
+        etapes: [
+            "<b>Lancement du riz :</b> Mesurez un volume de riz pour deux volumes d'eau. Rincez le riz à l'eau claire, puis placez-le dans la casserole avec l'eau et une pincée de sel. Portez à ébullition, puis baissez le feu au minimum, couvrez et laissez cuire 11 à 12 minutes sans jamais soulever le couvercle.",
+            "<b>Préparation du brocoli :</b> Séparez le brocoli en petites têtes (fleurettes) pour une cuisson rapide. Rincez-les. Faites-les pré-cuire 4 minutes dans une petite casserole d'eau bouillante pour qu'ils soient tendres mais restent croquants, puis égouttez-les.",
+            "<b>Découpe du poulet :</b> Sur une planche dédiée, découpez vos blancs de poulet en fines lanières de taille égale pour garantir une cuisson homogène.",
+            "<b>Cuisson vive au wok :</b> Chauffez une cuillère à soupe d'huile dans votre grande poêle (ou wok) à feu vif. Jetez-y les lanières de poulet. Saisissez-les pendant 4 à 5 minutes jusqu'à ce qu'elles soient bien dorées sur toutes les faces.",
+            "<b>Le mélange final :</b> Baissez le feu à intensité moyenne, ajoutez les fleurettes de brocoli au poulet. Versez un filet de sauce soja (si vous en avez) ou assaisonnez de sel et de poivre. Remuez constamment pendant 3 minutes.",
+            "<b>Dressage :</b> Servez le riz chaud dans une assiette creuse et déposez le sauté de poulet et brocoli fumant par-dessus."
+        ],
+        astuce: "💡 <b>L'atout nutrition :</b> Le brocoli est une excellente source de vitamine C. En le cuisant très peu de temps (juste saisi), vous préservez un maximum de ses nutriments !"
+    },
+    {
+        nom: "Poke Bowl Saumon & Avocat sur Lit de Riz",
+        temp: "froide",
+        ingredients: ["Avocat", "Saumon", "Riz"],
+        temps: "15 min",
+        materiel: "Bol large, couteau bien aiguisé, planche",
+        etapes: [
+            "<b>La base de riz :</b> Déposez une portion de riz préalablement cuit et refroidi (température ambiante ou frais) uniformément au fond de votre bol.",
+            "<b>Découpe du saumon :</b> Prenez votre pavé de saumon frais (ou fumé) et taillez-le délicatement en petits cubes réguliers d'environ 1,5 cm.",
+            "<b>Préparation de l'avocat :</b> Coupez l'avocat en deux, retirez le noyau, puis prélevez la chair à l'aide d'une cuillère à soupe. Taillez-la en fines lamelles régulières.",
+            "<b>Mise en place :</b> Disposez harmonieusement les cubes de saumon d'un côté du bol et les lamelles d'avocat de l'autre, par-dessus le riz.",
+            "<b>Assaisonnement protecteur :</b> Pressez immédiatement un demi-citron sur l'avocat pour éviter qu'il ne noircisse. Ajoutez un filet de sauce soja et quelques graines si vous en possédez."
+        ],
+        astuce: "💡 <b>Le conseil fraîcheur :</b> Pour un saumon cru, veillez à utiliser un poisson extra-frais ou préalablement congelé pour des raisons de sécurité alimentaire."
+    },
+    {
+        nom: "Salade de Riz Complète aux Tomates et Œufs Durs",
+        temp: "froide",
+        ingredients: ["Riz", "Tomate", "Œuf"],
+        temps: "20 min",
+        materiel: "Casserole, couteau, saladier",
+        etapes: [
+            "<b>Cuisson des œufs durs :</b> Portez de l'eau à ébullition dans une petite casserole. Plongez-y délicatement les œufs à l'aide d'une cuillère. Comptez précisément 9 minutes de cuisson. Dès la fin du minuteur, plongez-les dans de l'eau glacée pour faciliter l'écaillage.",
+            "<b>Préparation des ingrédients :</b> Écalez les œufs refroidis et coupez-les en quatre. Lavez et taillez vos tomates en dés de taille moyenne.",
+            "<b>Mélange :</b> Dans votre saladier, déposez du riz préalablement cuit et parfaitement refroidi. Ajoutez les dés de tomates et les morceaux d'œufs.",
+            "<b>Vinaigrette maison :</b> Dans un petit verre, mélangez une pincée de sel, du poivre, une cuillère à café de moutarde, puis émulsionnez avec deux cuillères à soupe d'huile et une de vinaigre. Versez sur la salade et touillez délicatement."
+        ],
+        astuce: "💡 <b>Astuce anti-gaspillage :</b> Cette recette est idéale pour vider le frigo et utiliser un reste de riz cuit de la veille !"
+    }
+];
+
+let alimentsChoisis = [];
+let tempSelectionnee = "froide";
+
+function initialiserIngredients() {
+    Object.keys(ingredientsData).forEach(cat => {
+        const container = document.getElementById(cat + "-box");
+        container.innerHTML = ""; // Sécurité pour éviter les doublons
+        ingredientsData[cat].forEach(ing => {
+            const btn = document.createElement("button");
+            btn.className = "btn";
+            btn.textContent = ing;
+            btn.onclick = function() { toggleIngredient(ing, btn); };
+            container.appendChild(btn);
+        });
+    });
+}
+
+function toggleIngredient(nom, bouton) {
+    const index = alimentsChoisis.indexOf(nom);
+    if (index > -1) {
+        alimentsChoisis.splice(index, 1);
+        bouton.classList.remove("active");
+    } else {
+        alimentsChoisis.push(nom);
+        bouton.classList.add("active");
+    }
+    mettreAJourPanier();
+}
+
+function mettreAJourPanier() {
+    const basket = document.getElementById("basket");
+    if (alimentsChoisis.length === 0) {
+        basket.innerHTML = '<span style="color: #94a3b8; font-style: italic;">Aucun ingrédient sélectionné.</span>';
+        return;
+    }
+    basket.innerHTML = "";
+    alimentsChoisis.forEach(ing => {
+        const badge = document.createElement("span");
+        badge.className = "badge";
+        badge.textContent = ing;
+        basket.appendChild(badge);
+    });
+}
+
+function selectTemp(temp, element) {
+    tempSelectionnee = temp;
+    const boutons = document.querySelectorAll("#temp-group .btn");
+    boutons.forEach(b => b.classList.remove("active"));
+    element.classList.add("active");
+}
+
+function chercherRecettes() {
+    const selectorBox = document.getElementById("selector-box");
+    const choicesContainer = document.getElementById("recipe-choices-container");
+    const resultBox = document.getElementById("result");
+
+    resultBox.style.display = "none";
+
+    if (alimentsChoisis.length === 0) {
+        alert("Veuillez sélectionner au moins un ingrédient !");
+        return;
+    }
+
+    let recettesTrouvees = baseRecettes.filter(recette => {
+        return recette.temp === tempSelectionnee && recette.ingredients.some(ing => alimentsChoisis.includes(ing));
+    });
+
+    choicesContainer.innerHTML = ""; 
+
+    if (recettesTrouvees.length > 0) {
+        document.getElementById("selector-title").textContent = `Choisir parmi les ${recettesTrouvees.length} recettes détaillées trouvées :`;
+        
+        recettesTrouvees.forEach(recette => {
+            const btn = document.createElement("button");
+            btn.className = "btn-choice";
+            btn.textContent = recette.nom;
+            btn.onclick = function() { 
+                document.querySelectorAll(".btn-choice").forEach(b => b.classList.remove("selected"));
+                btn.classList.add("selected");
+                afficherContenuRecette(recette); 
+            };
+            choicesContainer.appendChild(btn);
+        });
+    } else {
+        document.getElementById("selector-title").textContent = "Aucun modèle exact en base. Voici une méthode pas-à-pas guidée :";
+        
+        const btnImpro = document.createElement("button");
+        btnImpro.className = "btn-choice";
+        btnImpro.textContent = `Guide de cuisson improvisée (${tempSelectionnee})`;
+        btnImpro.onclick = function() {
+            btnImpro.classList.add("selected");
+            const improRecette = {
+                nom: `Poêlée / Salade Créative sur mesure`,
+                ingredients: alimentsChoisis,
+                temps: "15 à 20 min",
+                materiel: tempSelectionnee === "chaude" ? "Poêle antiadhésive, spatule en bois, couteau" : "Saladier, couteau de cuisine",
+                etapes: tempSelectionnee === "chaude" 
+                    ? [
+                        "<b>Étape 1 : Le Taillage :</b> Lavez vos ingrédients : " + alimentsChoisis.join(', ') + ". Découpez-les de manière homogène (légumes en fines tranches, protéines en dés de 2cm) pour qu'ils cuisent à la même vitesse.",
+                        "<b>Étape 2 : Le Saisissement :</b> Versez 1 cuillère à soupe d'huile dans votre poêle chaude. Ajoutez d'abord vos protéines (Poulet, Tofu, Viandes) et laissez-les dorer 4 minutes sans trop remuer pour créer une belle croûte.",
+                        "<b>Étape 3 : L'ajout des végétaux :</b> Incorporez les légumes. Baissez à feu moyen. Laissez cuire 8 à 10 minutes en remuant de temps en temps. Si vous avez choisi un féculent (déjà cuit), ajoutez-le lors des 2 dernières minutes pour le réchauffer.",
+                        "<b>Étape 4 : La touche finale :</b> Coupez le feu. Assaisonnez avec du sel, du poivre et les herbes de votre choix avant de dresser."
+                      ]
+                    : [
+                        "<b>Étape 1 : Nettoyage et Découpe :</b> Lavez vos végétaux : " + alimentsChoisis.join(', ') + ". Pour les légumes croquants, râpez-les ou émincez-les très finement. Pour les protéines froides, émiettez-les ou coupez-les en dés.",
+                        "<b>Étape 2 : Le Lit de base :</b> Si vous avez coché un féculent (Riz, Pâtes), déposez-le bien froid au fond du saladier pour servir de base neutre.",
+                        "<b>Étape 3 : La Vinaigrette Structurée :</b> Ne versez pas l'huile directement. Dans un coin du bol ou un verre, mélangez d'abord le sel, le poivre, un élément acide (jus de citron ou vinaigre), puis ajoutez l'huile en fouettant.",
+                        "<b>Étape 4 : L'Amalgame :</b> Ajoutez tous les autres ingrédients sur le féculent, versez la vinaigrette et remuez délicatement à l'aide de deux couverts."
+                      ],
+                astuce: "💡 <b>Règle d'or en nutrition :</b> Essayez toujours d'associer un végétal (fruit/légume) avec une protéine pour obtenir un plat rassasiant !"
+            };
+            afficherContenuRecette(improRecette);
+        };
+        choicesContainer.appendChild(btnImpro);
+    }
+
+    selectorBox.style.display = "block";
+    selectorBox.scrollIntoView({ behavior: 'smooth' });
+}
+
+function afficherContenuRecette(recette) {
+    const resultBox = document.getElementById("result");
+    const recipeTitle = document.getElementById("recipe-title");
+    const recipeIngredients = document.getElementById("recipe-ingredients");
+    const recipeSteps = document.getElementById("recipe-steps");
+    const recipeTip = document.getElementById("recipe-tip");
+    
+    document.getElementById("meta-time").innerHTML = `⏱️ <b>Temps :</b> ${recette.temps}`;
+    document.getElementById("meta-tools").innerHTML = `🍳 <b>Matériel :</b> ${recette.materiel}`;
+
+    recipeTitle.textContent = recette.nom;
+    recipeIngredients.textContent = "Ingrédients requis pour cette recette : " + recette.ingredients.join(", ");
+    
+    recipeSteps.innerHTML = "";
+    recette.etapes.forEach(etape => {
+        const div = document.createElement("div");
+        div.className = "step-block";
+        div.innerHTML = etape;
+        recipeSteps.appendChild(div);
+    });
+
+    recipeTip.innerHTML = recette.astuce;
+
+    resultBox.style.display = "block";
+    resultBox.scrollIntoView({ behavior: 'smooth' });
+}
+
+window.onload = initialiserIngredients;
+</script>
+</body>
+</html>
