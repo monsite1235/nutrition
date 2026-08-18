@@ -360,6 +360,84 @@ const baseRecettes = [
             "<b>Vinaigrette maison :</b> Dans un petit verre, mélangez une pincée de sel, du poivre, une cuillère à café de moutarde, puis émulsionnez avec deux cuillères à soupe d'huile et une de vinaigre. Versez sur la salade et touillez délicatement."
         ],
         astuce: "💡 <b>Astuce anti-gaspillage :</b> Cette recette est idéale pour vider le frigo et utiliser un reste de riz cuit de la veille !"
+    },
+    {
+        nom: "Poêlée Express de Poulet et Courgettes",
+        temp: "chaude",
+        ingredients: ["Poulet", "Courgette"],
+        temps: "15 min",
+        materiel: "Poêle, couteau, planche à découper",
+        etapes: [
+            "<b>Découpe :</b> Taillez les blancs de poulet en dés et coupez les courgettes en rondelles fines.",
+            "<b>Saisie :</b> Dans une poêle bien chaude arrosée d'un filet d'huile d'olive, faites dorer le poulet pendant 5 minutes.",
+            "<b>Cuisson des légumes :</b> Ajoutez les rondelles de courgette dans la poêle. Salez, poivrez et laissez cuire à feu moyen pendant 7 à 8 minutes en remuant régulièrement jusqu'à ce que les courgettes soient tendres."
+        ],
+        astuce: "💡 <b>Astuce :</b> Ajoutez une pincée d'herbes de Provence en fin de cuisson pour parfumer le tout."
+    },
+    {
+        nom: "Omelette Gourmande aux Champignons et Épinards",
+        temp: "chaude",
+        ingredients: ["Œuf", "Champignon", "Épinard"],
+        temps: "12 min",
+        materiel: "Poêle antiadhésive, bol, fouet ou fourchette",
+        etapes: [
+            "<b>Préparation des légumes :</b> Émincez les champignons et rincez les épinards.",
+            "<b>Faire suer :</b> Dans la poêle chaude avec une noisette de beurre ou un peu d'huile, faites revenir les champignons et les épinards 3 minutes jusqu'à réduction.",
+            "<b>Cuisson :</b> Battez les œufs en omelette dans un bol, salez et poivrez. Versez sur les légumes dans la poêle et laissez cuire à feu doux pendant 4 à 5 minutes selon votre préférence (baveuse ou bien cuite)."
+        ],
+        astuce: "💡 <b>Conseil :</b> Pliez l'omelette en deux juste avant de la servir dans l'assiette."
+    },
+    {
+        nom: "Salade Fraîcheur Tomate, Concombre et Feta",
+        temp: "froide",
+        ingredients: ["Tomate", "Concombre"],
+        temps: "10 min",
+        materiel: "Saladier, couteau",
+        etapes: [
+            "<b>Découpe :</b> Lavez puis coupez les tomates et le concombre en dés réguliers.",
+            "<b>Assaisonnement :</b> Placez-les dans un saladier, salez, poivrez et arrosez abondamment d'huile d'olive et d'un trait de jus de citron.",
+            "<b>Mélange :</b> Mélangez bien le tout et servez frais."
+        ],
+        astuce: "💡 <b>Conseil :</b> Si vous avez des herbes fraîches (menthe ou basilic), c'est le moment d'en ciseler par-dessus !"
+    },
+    {
+        nom: "Bowl de Quinoa, Avocat et Pois Chicks",
+        temp: "froide",
+        ingredients: ["Quinoa", "Avocat", "Pois chiches"],
+        temps: "15 min",
+        materiel: "Grand bol, couteau",
+        etapes: [
+            "<b>Base :</b> Déposez votre quinoa préalablement cuit et refroidi au fond du bol.",
+            "<b>Garniture :</b> Rincez et égouttez les pois chiches. Découpez l'avocat en dés ou en tranches.",
+            "<b>Assemblage :</b> Répartissez les pois chiches et l'avocat sur le quinoa. Assaisonnez d'un filet d'huile d'olive, de sel et de jus de citron."
+        ],
+        astuce: "💡 <b>Atout santé :</b> Une alliance protéinée et végétale parfaite pour un repas rassasiant."
+    },
+    {
+        nom: "Émincé de Bœuf Saute aux Poivrons et Oignons",
+        temp: "chaude",
+        ingredients: ["Bœuf", "Poivron", "Oignon"],
+        temps: "15 min",
+        materiel: "Wok ou grande poêle, planche à découper",
+        etapes: [
+            "<b>Préparation :</b> Émincez le bœuf en fines lanières. Coupez le poivron et l'oignon en fines lanières également.",
+            "<b>Cuisson vive :</b> Faites chauffer la poêle avec un peu d'huile à feu très vif. Faites-y revenir le bœuf 2 minutes pour bien le saisir, puis retirez-le de la poêle.",
+            "<b>Cuisson des légumes :</b> Dans la même poêle, faites sauter les poivrons et oignons 5 à 6 minutes. Remettez le bœuf 1 minute pour réchauffer le tout ensemble, salez et poivrez."
+        ],
+        astuce: "💡 <b>Astuce :</b> Gardez la viande légèrement saignante pour conserver toute sa tendreté."
+    },
+    {
+        nom: "Poêlée de Patates Douces et Lentilles au Cumin",
+        temp: "chaude",
+        ingredients: ["Patate douce", "Lentilles"],
+        temps: "20 min",
+        materiel: "Sauteuse avec couvercle",
+        etapes: [
+            "<b>Préparation :</b> Épluchez et coupez la patate douce en petits dés très fins pour accélérer la cuisson.",
+            "<b>Cuisson patate douce :</b> Faites revenir les dés dans une sauteuse avec un peu d'huile pendant 10 minutes à couvert en remuant souvent.",
+            "<b>Mélange :</b> Ajoutez les lentilles (déjà cuites en conserve), assaisonnez de sel, poivre et épices. Laissez mijoter 5 minutes à feu doux pour mélanger les saveurs."
+        ],
+        astuce: "💡 <b>Nutrition :</b> Un plat riche en fibres et en glucides complexes à faible index glycémique."
     }
 ];
 
@@ -426,8 +504,11 @@ function chercherRecettes() {
         return;
     }
 
+    // CORRECTION APPLIQUÉE : Seules les recettes dont TOUS les ingrédients sont cochés sont retenues.
     let recettesTrouvees = baseRecettes.filter(recette => {
-        return recette.temp === tempSelectionnee && recette.ingredients.some(ing => alimentsChoisis.includes(ing));
+        const respecteTemp = recette.temp === tempSelectionnee;
+        const sansIngredientsInterdits = recette.ingredients.every(ing => alimentsChoisis.includes(ing));
+        return respecteTemp && sansIngredientsInterdits;
     });
 
     choicesContainer.innerHTML = ""; 
